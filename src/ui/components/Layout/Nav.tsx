@@ -57,7 +57,9 @@ export default function Nav() {
           <div className="flex">
             <ActiveLink href="/">Home</ActiveLink>
             {isAuthed && <ActiveLink href="/bag">Bag</ActiveLink>}
+            <ActiveLink href="/marketplace">Marketplace</ActiveLink>
             <ActiveLink href="/info">Info</ActiveLink>
+            
           </div>
           <div className="flex items-center gap-4">
             {principal && !principal.isAnonymous() && (
