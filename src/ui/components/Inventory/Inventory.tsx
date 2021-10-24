@@ -29,10 +29,12 @@ export function Inventory() {
       <div className="p-4">
         <div>
           My Bag
+          
           {inventory.isSuccess && ` (${count} ${pluralize("item", count)})`}
           {inventory.isFetching && (
             <AiOutlineLoading className="ml-2 inline-block animate-spin" />
           )}
+          {inventory.isSuccess && <BoundleModal/>}
         </div>
         <div className="mt-2 flex flex-wrap items-stretch gap-4">
           {!inventory.isSuccess ? (
