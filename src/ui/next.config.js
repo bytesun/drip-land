@@ -4,13 +4,13 @@ const DRIP_CANISTER_ID =
   process.env.NEXT_PUBLIC_DFX_NETWORK === "local"
     ? require("../../.dfx/local/canister_ids.json").Drip.local
     : process.env.NEXT_PUBLIC_DFX_NETWORK === "staging"
-    ? "prees-saaaa-aaaai-qanqa-cai"
+    ? "ryjl3-tyaaa-aaaaa-aaaba-cai"
     : "d3ttm-qaaaa-aaaai-qam4a-cai";
 console.log(`DRIP_CANISTER_ID=${DRIP_CANISTER_ID}`);
 
 const IDENTITY_CANISTER_ID =
   process.env.NEXT_PUBLIC_DFX_NETWORK === "local"
-    ? "rdmx6-jaaaa-aaaaa-aaadq-cai"
+    ? "rno2w-sqaaa-aaaaa-aaacq-cai"
     : undefined;
 console.log(`IDENTITY_CANISTER_ID=${IDENTITY_CANISTER_ID}`);
 

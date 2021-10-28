@@ -6,6 +6,7 @@ import { TypedItem } from "../../lib/types";
 import { bagUrl, dripUrl } from "../../lib/url";
 import SpinnerButton from "../Buttons/SpinnerButton";
 import TransferModal from "./TransferModal";
+import UnbundModal from "./UnbundleModal";
 
 export function getPropertyValue({ name, item }: { name: string; item: Item }) {
   const value = item.properties.find((prop) => prop.name === name)?.value;
@@ -92,8 +93,9 @@ export function ItemDetails({ item }: { item: TypedItem }) {
       <div className="border-t border-drip-purple-500 mt-4 pt-4 pb-2">
         <ul className="flex flex-row-wrap gap-2">
           <li>
-            <TransferModal item={item} />
+            <TransferModal item={item} />            
           </li>
+          <li><UnbundModal item={item} /></li>
           {item.extWrapped && (
             <li>
               <SpinnerButton
