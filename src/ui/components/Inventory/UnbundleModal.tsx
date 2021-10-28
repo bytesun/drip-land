@@ -9,6 +9,7 @@ import SpinnerButton from "../Buttons/SpinnerButton";
 import ErrorAlert from "../Labels/ErrorAlert";
 import Modal from "../Layout/Modal";
 import {
+  useDrip,
   useBag,
   useGlobalContext,
 } from "../../components/Store/Store";
@@ -20,6 +21,7 @@ export default function UnboundleModal({ item }: { item: TypedItem }) {
     state: { principal },
   } = useGlobalContext();
   const bag = useBag();
+  const drip = useDrip();
 
   const [loading,setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -29,7 +31,8 @@ export default function UnboundleModal({ item }: { item: TypedItem }) {
   const unbundleItem = () => {
     setLoading(true);
     setIsOpen(false)
-    bag.unbundle(item.id).then((r)=> {
+    // drip.transfer_with_notify("mx7fv-viaaa-aaaah-aarsa-cai", BigInt(item.id));
+    bag.unbundleDrip(BigInt(item.id)).then((r)=> {
       setLoading(false)
       console.log(r)
     })    

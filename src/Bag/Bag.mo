@@ -398,6 +398,74 @@ shared actor class Bag() = this {
     #ok(())
   };
 
+//unbundle a drip
+ public shared({ caller }) func unbundleDrip(token_id: Nat64): async Result.Result<(), Text> {
+        // Fetch data
+    let data = await drip.data_of(token_id);
+
+        // Create constituents
+        let count = data.size();
+        let idx = nextItemId;
+        let newItemIds = Array.tabulate<Nat32>(count, func (i) {
+          let id = Nat32.fromNat(i) + idx;
+          let item = {
+            id = id;
+            name = data[i].name;
+            owner = caller;
+            properties = [{
+              name = "slot";
+              value = #Text(switch (data[i].slot) {
+                case "weapon" { "hand" };
+                case t { t };
+              });
+            }, {
+              name = "prefix";
+              value = #Text(data[i].prefix);
+            }, {
+              name = "name_prefix";
+              value = #Text(data[i].name_prefix);
+            }, {
+              name = "name_suffix";
+              value = #Text(data[i].name_suffix);
+            }, {
+              name = "special";
+              value = #Bool(data[i].special);
+            }];
+            children = [];
+            childOf = null;
+            state = null;
+            dripProperties = null;
+          };
+          allItems.put(id, item);
+          id
+        });
+
+        nextItemId += Nat32.fromNat(count);
+
+        // Add to item ledger
+        let newId = nextItemId;
+        allItems.put(newId, {
+          id = newId;
+          dripProperties = ?{
+            id = Nat32.fromNat(Nat64.toNat(token_id));
+            isBurned = true;
+          };
+          name = "Drip " # Nat64.toText(token_id);
+          owner = thisPrincipal();
+          properties = [];
+          children = newItemIds;
+          childOf = null;
+          state = null;
+        });
+        nextItemId += 1;
+        dripsBurned += 1;
+
+        // Add to receiver ledger
+        let receiverInventory = inventoryOf(caller);
+        updateInventory(caller, Array.append(receiverInventory, newItemIds));
+     
+    #ok(())
+  };
 
   // ---- System
 

@@ -34,12 +34,12 @@ type Result_2 =
 type Result_1 = 
  variant {
    err: text;
-   ok;
+   ok: vec nat32;
  };
 type Result = 
  variant {
    err: text;
-   ok: vec nat32;
+   ok;
  };
 type Property = 
  record {
@@ -120,16 +120,17 @@ type Bag =
    bundle: (BundleRequest) -> (Result_2);
    dataOf: (vec nat32) -> (vec opt Item) query;
    dripsBurnedCount: () -> (nat) query;
-   equip: (vec nat32) -> (Result_1);
+   equip: (vec nat32) -> (Result);
    http_request: (HttpRequest) -> (HttpResponse) query;
    name: () -> (text) query;
    ownerOf: (vec nat32) -> (vec opt principal) query;
    playerData: (opt principal) -> (opt PlayerData) query;
    symbol: () -> (text) query;
    totalSupply: () -> (nat) query;
-   transferTo: (principal, nat32, opt bool) -> (Result_1);
-   transfer_notification: (TransferNotification) -> (Result_1);
-   unbundle: (nat32) -> (Result);
+   transferTo: (principal, nat32, opt bool) -> (Result);
+   transfer_notification: (TransferNotification) -> (Result);
+   unbundle: (nat32) -> (Result_1);
+   unbundleDrip: (nat64) -> (Result);
    userTokens: (opt principal) -> (vec nat32) query;
  };
 service : () -> Bag

@@ -3,7 +3,7 @@ export interface Bag {
   'bundle' : (arg_0: BundleRequest) => Promise<Result_2>,
   'dataOf' : (arg_0: Array<number>) => Promise<Array<[] | [Item]>>,
   'dripsBurnedCount' : () => Promise<bigint>,
-  'equip' : (arg_0: Array<number>) => Promise<Result_1>,
+  'equip' : (arg_0: Array<number>) => Promise<Result>,
   'http_request' : (arg_0: HttpRequest) => Promise<HttpResponse>,
   'name' : () => Promise<string>,
   'ownerOf' : (arg_0: Array<number>) => Promise<Array<[] | [Principal]>>,
@@ -14,9 +14,10 @@ export interface Bag {
       arg_0: Principal,
       arg_1: number,
       arg_2: [] | [boolean],
-    ) => Promise<Result_1>,
-  'transfer_notification' : (arg_0: TransferNotification) => Promise<Result_1>,
-  'unbundle' : (arg_0: number) => Promise<Result>,
+    ) => Promise<Result>,
+  'transfer_notification' : (arg_0: TransferNotification) => Promise<Result>,
+  'unbundle' : (arg_0: number) => Promise<Result_1>,
+  'unbundleDrip' : (arg_0: bigint) => Promise<Result>,
   'userTokens' : (arg_0: [] | [Principal]) => Promise<Array<number>>,
 }
 export interface BundleRequest { 'ids' : Array<number>, 'name' : string }
@@ -70,9 +71,9 @@ export interface Property {
     { 'Text' : string },
   'name' : string,
 }
-export type Result = { 'ok' : Array<number> } |
+export type Result = { 'ok' : null } |
   { 'err' : string };
-export type Result_1 = { 'ok' : null } |
+export type Result_1 = { 'ok' : Array<number> } |
   { 'err' : string };
 export type Result_2 = { 'ok' : number } |
   { 'err' : string };

@@ -3,7 +3,7 @@ import { Principal } from "@dfinity/principal";
 import { DateTime } from "luxon";
 import React, { createContext, useContext, useReducer } from "react";
 import BagService from "../../declarations/Bag/Bag.did";
-import * as Bag from "../../declarations/Bag/index";
+import {Bag} from "../../declarations/Bag/index";
 import DripService from "../../declarations/Drip/Drip.did";
 import * as Drip from "../../declarations/Drip/index";
 import * as Wrapper from "../../declarations/Wrapper/index";
@@ -27,7 +27,7 @@ export type State = {
 
 const createActors = (agent: HttpAgent = defaultAgent) => ({
   drip: Drip.createActor(agent),
-  bag: Bag.createActor(agent),
+  bag: Bag,
   wrapper: Wrapper.createActor(agent),
 });
 
