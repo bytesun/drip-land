@@ -21,7 +21,7 @@ export default function BoundleModal(props) {
 
   const [items, setItems] = useState(props.items);
   
-  const itemCheckList = items.map(item => (
+  const itemCheckList = props.items && props.items.map(item => (
     <>
     <input type="checkbox" name={item.name} value={item.id}/>
     <label > {item.name}</label><br></br>

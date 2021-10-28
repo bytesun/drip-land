@@ -6,6 +6,7 @@ import { TypedItem } from "../../lib/types";
 import { bagUrl, dripUrl } from "../../lib/url";
 import { pluralize } from "../../lib/utils";
 import { ItemDetails } from "./ItemDetails";
+import BundleModal from "./BundleModal";
 
 const MINIMUM_ITEMS = 8;
 
@@ -34,7 +35,7 @@ export function Inventory() {
           {inventory.isFetching && (
             <AiOutlineLoading className="ml-2 inline-block animate-spin" />
           )}
-          {inventory.isSuccess && <BoundleModal/>}
+          {inventory.isSuccess && <BundleModal/>}
         </div>
         <div className="mt-2 flex flex-wrap items-stretch gap-4">
           {!inventory.isSuccess ? (
