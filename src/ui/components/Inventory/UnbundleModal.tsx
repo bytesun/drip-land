@@ -56,7 +56,8 @@ export default function UnboundleModal({ item }: { item: TypedItem }) {
         {loading &&
          <AiOutlineLoading className="ml-2 inline-block animate-spin" />
         }
-        {!loading && item.children.length > 0 &&
+        {item.dripProperties[0] ? item.dripProperties[0].isBurned : "no"}
+        {!loading && ((item.type === "Bag" && item.children.length > 0) || item.type === "Drip") &&
           <button type="button" onClick={openModal} className="btn-inventory">
           Unbundle
         </button>

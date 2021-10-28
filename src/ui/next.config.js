@@ -18,7 +18,7 @@ const BAG_CANISTER_ID =
   process.env.NEXT_PUBLIC_DFX_NETWORK === "local"
     ? require("../../.dfx/local/canister_ids.json").Bag.local
     : process.env.NEXT_PUBLIC_DFX_NETWORK === "staging"
-    ? require("../../canister_ids.json").BagStaging.ic
+    ? "rvzx7-oqaaa-aaaaj-qagxq-cai"
     : require("../../canister_ids.json").Bag.ic;
 console.log(`BAG_CANISTER_ID=${BAG_CANISTER_ID}`);
 
