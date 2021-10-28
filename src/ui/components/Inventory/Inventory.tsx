@@ -35,7 +35,7 @@ export function Inventory() {
           {inventory.isFetching && (
             <AiOutlineLoading className="ml-2 inline-block animate-spin" />
           )}
-          {inventory.isSuccess && <BundleModal/>}
+          {inventory.isSuccess && <BundleModal items={inventory.data}/>}
         </div>
         <div className="mt-2 flex flex-wrap items-stretch gap-4">
           {!inventory.isSuccess ? (
@@ -46,6 +46,7 @@ export function Inventory() {
             Array.from({ length: Math.max(count, MINIMUM_ITEMS) }, (_, i) => {
               if (i < count) {
                 const item = inventory.data[i];
+
                 return (
                   <div
                     key={i}

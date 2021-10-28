@@ -34,6 +34,8 @@ export function ItemDetails({ item }: { item: TypedItem }) {
 
   return (
     <div className="">
+      {item.type === "Drip" && "Drip"}
+      {item.type === "Bag" && "Bag"}
       <div className="w-64 h-64 bg-black">
         <img
           key={item.id}
@@ -41,7 +43,8 @@ export function ItemDetails({ item }: { item: TypedItem }) {
         />
       </div>
       <h2 className="font-bold mt-4">
-        {item.name}{" "}
+        {item.type === "Drip" && item.name}
+        {item.type === "Bag" && "#"+item.id+" "+item.name}{" "}
         {item.extWrapped && (
           <label className="px-1 py-0.5 text-xs uppercase bg-green-700 rounded-md">
             Wrapped

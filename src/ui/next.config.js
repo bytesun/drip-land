@@ -4,7 +4,7 @@ const DRIP_CANISTER_ID =
   process.env.NEXT_PUBLIC_DFX_NETWORK === "local"
     ? require("../../.dfx/local/canister_ids.json").Drip.local
     : process.env.NEXT_PUBLIC_DFX_NETWORK === "staging"
-    ? "ryjl3-tyaaa-aaaaa-aaaba-cai"
+    ? "d3ttm-qaaaa-aaaai-qam4a-cai"
     : "d3ttm-qaaaa-aaaai-qam4a-cai";
 console.log(`DRIP_CANISTER_ID=${DRIP_CANISTER_ID}`);
 

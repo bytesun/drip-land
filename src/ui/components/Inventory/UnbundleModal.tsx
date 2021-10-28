@@ -1,6 +1,7 @@
 import { Principal } from "@dfinity/principal";
 import classNames from "classnames";
 import React, { useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
 import { AiOutlineLoading } from "react-icons/ai";
 import { useTransfer } from "../../lib/hooks/useTransfer";
 import { TypedItem } from "../../lib/types";
@@ -22,6 +23,7 @@ export default function UnboundleModal({ item }: { item: TypedItem }) {
   } = useGlobalContext();
   const bag = useBag();
   const drip = useDrip();
+  const queryClient = useQueryClient();
 
   const [loading,setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -32,10 +34,20 @@ export default function UnboundleModal({ item }: { item: TypedItem }) {
     setLoading(true);
     setIsOpen(false)
     // drip.transfer_with_notify("mx7fv-viaaa-aaaah-aarsa-cai", BigInt(item.id));
-    bag.unbundleDrip(BigInt(item.id)).then((r)=> {
-      setLoading(false)
-      console.log(r)
-    })    
+    if(item.type == "Drip"){
+      bag.unbundleDrip(BigInt(item.id)).then((r)=> {
+        setLoading(false)
+        console.log(r)
+        queryClient.refetchQueries("inventory");
+      })
+    }else if(item.type === "Bag"){
+      bag.unbundle(item.id).then(r=>{
+        setLoading(false)
+        console.log(r)
+        queryClient.refetchQueries("inventory");
+      });
+    }
+    
   };
 
   return (
@@ -44,7 +56,7 @@ export default function UnboundleModal({ item }: { item: TypedItem }) {
         {loading &&
          <AiOutlineLoading className="ml-2 inline-block animate-spin" />
         }
-        {!loading &&
+        {!loading && item.children.length > 0 &&
           <button type="button" onClick={openModal} className="btn-inventory">
           Unbundle
         </button>

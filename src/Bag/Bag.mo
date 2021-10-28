@@ -19,7 +19,7 @@ import TrieSet "mo:base/TrieSet";
 
 shared actor class Bag() = this {
   // ---- Constants
-  let drip : Drip.Self = actor "prees-saaaa-aaaai-qanqa-cai";
+  let drip : Drip.Self = actor "d3ttm-qaaaa-aaaai-qam4a-cai";//"prees-saaaa-aaaai-qanqa-cai";
 
 
   // ---- State
@@ -451,7 +451,7 @@ shared actor class Bag() = this {
             isBurned = true;
           };
           name = "Drip " # Nat64.toText(token_id);
-          owner = thisPrincipal();
+          owner = caller;
           properties = [];
           children = newItemIds;
           childOf = null;
@@ -467,6 +467,10 @@ shared actor class Bag() = this {
     #ok(())
   };
 
+  //for testing
+  public query func getAllItems() : async [T.Item]{
+    Iter.toArray(allItems.vals());
+  };
   // ---- System
 
   system func preupgrade() {
