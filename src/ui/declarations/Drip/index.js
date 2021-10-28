@@ -1,7 +1,7 @@
 import { Actor } from "@dfinity/agent";
 import { idlFactory } from "./Drip.did.js";
 
-export const canisterId = "d3ttm-qaaaa-aaaai-qam4a-cai";//process.env.DRIP_CANISTER_ID;
+export const canisterId = process.env.DRIP_CANISTER_ID;
 
 /**
  * @param {{agent: import("@dfinity/agent").HttpAgent}} [options]
