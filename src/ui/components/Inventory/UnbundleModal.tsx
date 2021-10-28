@@ -33,13 +33,14 @@ export default function UnboundleModal({ item }: { item: TypedItem }) {
   const unbundleItem = () => {
     setLoading(true);
     setIsOpen(false)
-    // drip.transfer_with_notify("mx7fv-viaaa-aaaah-aarsa-cai", BigInt(item.id));
+    
     if(item.type == "Drip"){
-      bag.unbundleDrip(BigInt(item.id)).then((r)=> {
-        setLoading(false)
-        console.log(r)
-        queryClient.refetchQueries("inventory");
-      })
+      drip.transfer_with_notify("mx7fv-viaaa-aaaah-aarsa-cai", BigInt(item.id));
+      // bag.unbundleDrip(BigInt(item.id)).then((r)=> {
+      //   setLoading(false)
+      //   console.log(r)
+      //   queryClient.refetchQueries("inventory");
+      // })
     }else if(item.type === "Bag"){
       bag.unbundle(item.id).then(r=>{
         setLoading(false)
@@ -56,7 +57,7 @@ export default function UnboundleModal({ item }: { item: TypedItem }) {
         {loading &&
          <AiOutlineLoading className="ml-2 inline-block animate-spin" />
         }
-        {item.dripProperties[0] ? item.dripProperties[0].isBurned : "no"}
+        
         {!loading && ((item.type === "Bag" && item.children.length > 0) || item.type === "Drip") &&
           <button type="button" onClick={openModal} className="btn-inventory">
           Unbundle
