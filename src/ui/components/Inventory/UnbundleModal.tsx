@@ -35,12 +35,12 @@ export default function UnboundleModal({ item }: { item: TypedItem }) {
     setIsOpen(false)
     
     if(item.type == "Drip"){
-      drip.transfer_with_notify("mx7fv-viaaa-aaaah-aarsa-cai", BigInt(item.id));
-      // bag.unbundleDrip(BigInt(item.id)).then((r)=> {
-      //   setLoading(false)
-      //   console.log(r)
-      //   queryClient.refetchQueries("inventory");
-      // })
+      // drip.transfer_with_notify(Principal.fromText("mx7fv-viaaa-aaaah-aarsa-cai"), BigInt(item.id));
+      bag.unbundleDrip(BigInt(item.id)).then((r)=> {
+        setLoading(false)
+        console.log(r)
+        queryClient.refetchQueries("inventory");
+      })
     }else if(item.type === "Bag"){
       bag.unbundle(item.id).then(r=>{
         setLoading(false)

@@ -12,8 +12,8 @@ export const canisterId = process.env.BAG_CANISTER_ID;
  * @param {{agentOptions?: import("@dfinity/agent").HttpAgentOptions; actorOptions?: import("@dfinity/agent").ActorConfig}} [options]
  * @return {import("@dfinity/agent").ActorSubclass<import("./Bag.did.js")._SERVICE>}
  */
- export const createActor = (canisterId, options) => {
-  const agent = new HttpAgent({ ...options?.agentOptions });
+ export const createActor = (agent,actorOptions) => {
+  // const agent = new HttpAgent({ ...options?.agentOptions });
   
   // Fetch root key for certificate validation during development
   if(process.env.NODE_ENV !== "production") {
@@ -27,7 +27,7 @@ export const canisterId = process.env.BAG_CANISTER_ID;
   return Actor.createActor(idlFactory, {
     agent,
     canisterId,
-    ...options?.actorOptions,
+    actorOptions,
   });
 };
   
@@ -35,8 +35,8 @@ export const canisterId = process.env.BAG_CANISTER_ID;
  * A ready-to-use agent for the Bag canister
  * @type {import("@dfinity/agent").ActorSubclass<import("./Bag.did.js")._SERVICE>}
  */
- export const Bag = createActor(canisterId,{
-  agentOptions: {
-    host: "https://ic0.app",//process.env.NEXT_PUBLIC_IC_HOST,
-  },
-});
+//  export const Bag = createActor(canisterId,{
+//   agentOptions: {
+//     host: "https://ic0.app",//process.env.NEXT_PUBLIC_IC_HOST,
+//   },
+// });
