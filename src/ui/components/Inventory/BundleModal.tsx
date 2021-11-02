@@ -1,6 +1,6 @@
 import { Principal } from "@dfinity/principal";
 import classNames from "classnames";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import { useTransfer } from "../../lib/hooks/useTransfer";
 import { useMutation, useQueryClient } from "react-query";
@@ -15,6 +15,7 @@ import {
   useGlobalContext,
 } from "../../components/Store/Store";
 import { load } from "protobufjs";
+import useItems from "../../lib/hooks/useItems";
 export default function BoundleModal(props) {
 
   const {
@@ -34,10 +35,70 @@ export default function BoundleModal(props) {
   const [name, setName] = useState("");
   const [checkedIds, setCheckedIds] = useState([])
 
-  
-  const itemCheckList = props.items && props.items.map(item => (
+ const {drips,bundles,heads,chests,waists,hands,underwares,pants,accessories,foots } = useItems(props.items);
+  const itemCheckList_drip = drips && drips.map(item => (
     <>
+
     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>
+    
+    <label > {item.name}</label><br></br>
+    </>
+  ));
+
+  const itemCheckList_bundle = bundles && bundles.map(item => (
+    <>
+
+    <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>
+    
+    <label > {item.name}</label><br></br>
+    </>
+  ));
+
+  const itemCheckList_hand = hands && hands.map(item => (
+    <> 
+    <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
+    <label > {item.name}</label><br></br>
+    </>
+  ));
+  const itemCheckList_chest = chests && chests.map(item => (
+    <> 
+    <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
+    <label > {item.name}</label><br></br>
+    </>
+  ));
+  const itemCheckList_waist = waists && waists.map(item => (
+    <> 
+    <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
+    <label > {item.name}</label><br></br>
+    </>
+  ));
+  const itemCheckList_head = heads && heads.map(item => (
+    <> 
+    <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
+    <label > {item.name}</label><br></br>
+    </>
+  ));
+  const itemCheckList_underware = underwares && underwares.map(item => (
+    <> 
+    <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
+    <label > {item.name}</label><br></br>
+    </>
+  ));
+  const itemCheckList_pants = pants && pants.map(item => (
+    <> 
+    <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
+    <label > {item.name}</label><br></br>
+    </>
+  ));
+  const itemCheckList_accessory = accessories && accessories.map(item => (
+    <> 
+    <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
+    <label > {item.name}</label><br></br>
+    </>
+  ));
+  const itemCheckList_foot = foots && foots.map(item => (
+    <> 
+    <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
     <label > {item.name}</label><br></br>
     </>
   ));
@@ -94,8 +155,26 @@ export default function BoundleModal(props) {
         <form>
           <input name="bundleName" type="text" placeholder="boundle name" onChange={handleChange}/>
           <br/><br/>
-
-          {itemCheckList}
+          {/* {drips.length >0 && <><b>[Drip] </b><br/></>}
+          {itemCheckList_drip}<br/> */}
+          {bundles.length>0 && <><b>[Bundle] </b><br/></>}
+          {itemCheckList_bundle}
+          {heads.length > 0 && <><b>[Head] </b><br/></>}
+          {itemCheckList_head}
+          {chests.length>0 && <><b>[Chest] </b><br/></>}
+          {itemCheckList_chest}
+          {waists.length > 0 && <><b>[Waist]</b><br/></>}
+          {itemCheckList_waist}
+          {hands.length > 0 && <><b>[Hand] </b><br/></>}
+          {itemCheckList_hand}
+          {underwares.length>0 && <><b>[Underwear] </b><br/></>}
+          {itemCheckList_underware}
+          {pants.length>0 && <><b>[Pants] </b><br/></>}
+          {itemCheckList_pants}
+          {accessories.length>0&& <><b>[Accessory]</b><br/></>}
+          {itemCheckList_accessory}
+          {foots.length>0 && <><b>[Foot] </b><br/></>}
+          {itemCheckList_foot}<br/>
           
           {loading &&
           <AiOutlineLoading className="ml-2 inline-block animate-spin" />

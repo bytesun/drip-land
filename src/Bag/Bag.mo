@@ -19,7 +19,7 @@ import TrieSet "mo:base/TrieSet";
 
 shared actor class Bag() = this {
   // ---- Constants
-  let drip : Drip.Self = actor "d3ttm-qaaaa-aaaai-qam4a-cai";//"prees-saaaa-aaaai-qanqa-cai";
+  let drip : Drip.Self = actor "prees-saaaa-aaaai-qanqa-cai";//"d3ttm-qaaaa-aaaai-qam4a-cai";//;
 
 
   // ---- State
@@ -106,9 +106,40 @@ shared actor class Bag() = this {
   /*
     Equip an Item
   */
-  public shared({caller}) func equip(ids: [Nat32]) : async Result.Result<(), Text> {
+  public shared({caller}) func equip(token_id: Nat64) : async Result.Result<(), Text> {
     // TODO
-    #ok()
+    
+      // Add to item ledger
+        let newId = nextItemId;
+        allItems.put(newId, {
+          id = newId;
+          dripProperties = ?{
+            id = Nat32.fromNat(Nat64.toNat(token_id));
+            isBurned = false;
+          };
+          name = "Drip " # Nat64.toText(token_id);
+          owner = caller;
+          properties = [];
+          children = [];
+          childOf = null;
+          state = null;
+        });
+        nextItemId += 1;
+
+        // Add to receiver ledger
+        let playerData = Option.get(ledger.get(caller), {
+          name = "";
+          equipped = #bundle(?newId);
+          inventory = [];
+          status = [];
+        });
+        ledger.put(caller, {
+          name = playerData.name;
+          equipped = playerData.equipped;
+          status = playerData.status;
+          inventory = Array.append(playerData.inventory, [newId])
+        });
+        #ok()
   };
 
   /*
@@ -294,7 +325,7 @@ shared actor class Bag() = this {
     // Fetch data
     let data = await drip.data_of(token_id);
 
-    let memo = "equip";
+    let memo = "unbundle";
     switch(memo) {
       case "unbundle" {
         // Create constituents

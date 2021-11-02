@@ -94,7 +94,8 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'dripsBurnedCount' : IDL.Func([], [IDL.Nat], ['query']),
-    'equip' : IDL.Func([IDL.Vec(IDL.Nat32)], [Result], []),
+    'equip' : IDL.Func([IDL.Nat64], [Result], []),
+    'getAllItems' : IDL.Func([], [IDL.Vec(Item)], ['query']),
     'http_request' : IDL.Func([HttpRequest], [HttpResponse], ['query']),
     'name' : IDL.Func([], [IDL.Text], ['query']),
     'ownerOf' : IDL.Func(

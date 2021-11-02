@@ -5,6 +5,7 @@ import { useUnwrap } from "../../lib/hooks/useUnwrap";
 import { TypedItem } from "../../lib/types";
 import { bagUrl, dripUrl } from "../../lib/url";
 import SpinnerButton from "../Buttons/SpinnerButton";
+import EquipModal from "./EquipModal";
 import TransferModal from "./TransferModal";
 import UnbundModal from "./UnbundleModal";
 
@@ -99,6 +100,7 @@ export function ItemDetails({ item }: { item: TypedItem }) {
             <TransferModal item={item} />            
           </li>
           <li><UnbundModal item={item} /></li>
+          {/* <li><EquipModal item={item} /></li> */}
           {item.extWrapped && (
             <li>
               <SpinnerButton

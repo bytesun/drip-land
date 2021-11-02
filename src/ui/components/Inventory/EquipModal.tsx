@@ -13,10 +13,10 @@ import {
   useDrip,
   useBag,
   useGlobalContext,
-} from "../../components/Store/Store";
+} from "../Store/Store";
 
 
-export default function UnboundleModal({ item }: { item: TypedItem }) {
+export default function EquipModal({ item }: { item: TypedItem }) {
 
   const {
     state: { principal },
@@ -34,20 +34,14 @@ export default function UnboundleModal({ item }: { item: TypedItem }) {
     setLoading(true);
     setIsOpen(false)
     
-    if(item.type == "Drip"){
+  
       // drip.transfer_with_notify(Principal.fromText("rvzx7-oqaaa-aaaaj-qagxq-cai"), BigInt(item.id));
-      bag.unbundleDrip(BigInt(item.id)).then((r)=> {
+      bag.equip(BigInt(item.id)).then((r)=> {
         setLoading(false)
         console.log(r)
         queryClient.refetchQueries("inventory");
       })
-    }else if(item.type === "Bag"){
-      bag.unbundle(item.id).then(r=>{
-        setLoading(false)
-        console.log(r)
-        queryClient.refetchQueries("inventory");
-      });
-    }
+   
     
   };
 
@@ -60,7 +54,7 @@ export default function UnboundleModal({ item }: { item: TypedItem }) {
         
         {!loading && ((item.type === "Bag" && item.children.length > 0) || item.type === "Drip") &&
           <button type="button" onClick={openModal} className="btn-inventory">
-          Unbundle
+          Equip
         </button>
         }
         
@@ -69,9 +63,9 @@ export default function UnboundleModal({ item }: { item: TypedItem }) {
         isOpen={isOpen}
         openModal={openModal}
         closeModal={closeModal}
-        title="Unbundle Item"
+        title="Equip Item"
       >
-        Are you sure to unbundle this item?
+        Are you sure to equip this item?
         <button type="button" onClick={unbundleItem} className="btn-inventory">yes</button>
       </Modal>
     </>
