@@ -36,6 +36,7 @@ export default function UnboundleModal({ item }: { item: TypedItem }) {
     
     if(item.type == "Drip"){
       // drip.transfer_with_notify(Principal.fromText("rvzx7-oqaaa-aaaaj-qagxq-cai"), BigInt(item.id));
+      // drip.transfer_with_notify({to: Principal.fromText("rvzx7-oqaaa-aaaaj-qagxq-cai"), token_id: BigInt(item.id), memo: []}); 
       bag.unbundleDrip(BigInt(item.id)).then((r)=> {
         setLoading(false)
         console.log(r)
@@ -69,9 +70,9 @@ export default function UnboundleModal({ item }: { item: TypedItem }) {
         isOpen={isOpen}
         openModal={openModal}
         closeModal={closeModal}
-        title="Unbundle Item"
+        title={"Unbundle "+ (item.type == "Drip" ? "Drip" : "Item")}
       >
-        Are you sure to unbundle this item?
+        Are you sure to unbundle this {item.type == "Drip" ? "Drip" : "Item"}?<br/><br/>
         <button type="button" onClick={unbundleItem} className="btn-inventory">yes</button>
       </Modal>
     </>

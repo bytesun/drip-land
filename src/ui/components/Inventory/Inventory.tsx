@@ -13,8 +13,10 @@ const MINIMUM_ITEMS = 8;
 export function Inventory() {
   const inventory = useInventory();
 
-  const count = inventory.data?.length;
+  const [items, setItems] = useState([])
+  const [count,setCount] = useState(items.length);
   const [selectedItem, setSelectedItem] = useState<TypedItem>(null);
+  const [itemtype, setItemtype] = useState("Drip");
 
   useEffect(() => {
     if (selectedItem) {
@@ -23,7 +25,14 @@ export function Inventory() {
       );
       setSelectedItem(newSelectedItem);
     }
-  }, [inventory.data]);
+    var titems = [];
+    inventory.data && inventory.data.map(i=>{
+      if(i.type == itemtype)titems.push(i);
+    });
+    setItems(titems);
+    setCount(titems.length);
+  }, [inventory.data,itemtype]);
+
 
   return (
     <div className="w-full flex flex-col-reverse sm:flex-row">
@@ -37,7 +46,18 @@ export function Inventory() {
           )}
           {inventory.isSuccess && <BundleModal items={inventory.data}/>}
         </div>
-        <div className="mt-2 flex flex-wrap items-stretch gap-4">
+
+        <div className="grid grid-cols-12 gap-2">
+          <div className="mt-2 flex-co col-span-2">
+              <div className="bg-gray-400"> Drip Bundles</div>
+              <div className="text-right cursor-pointer" onClick={()=>setItemtype("Drip")}>IC Drips</div>
+              <div className="bg-gray-400"> Drip Gear</div>
+              <div  className="text-right cursor-pointer"  onClick={()=>setItemtype("Bag")}> Items</div>
+              <div className="text-right cursor-pointer"  onClick={()=>setItemtype("Tune")}> Tunes</div>
+          </div>
+            
+        
+        <div className="mt-2 flex flex-wrap items-stretch col-span-10 gap-2">
           {!inventory.isSuccess ? (
             <div className="w-full text-white text-center">
               Getting your things together...
@@ -45,13 +65,13 @@ export function Inventory() {
           ) : (
             Array.from({ length: Math.max(count, MINIMUM_ITEMS) }, (_, i) => {
               if (i < count) {
-                const item = inventory.data[i];
+                const item = items[i];
 
                 return (
                   <div
                     key={i}
                     className={classNames(
-                      "relative w-32 h-32 border-2 border-black bg-black hover:ring-2 ring-pink-500 cursor-pointer",
+                      "relative w-48 h-48 border-2 border-black bg-black hover:ring-2 ring-pink-500 cursor-pointer",
                       {
                         "ring-2 ring-pink-500": selectedItem?.id === item.id,
                       }
@@ -72,12 +92,13 @@ export function Inventory() {
                 );
               }
               return (
-                <div key={i} className="border-2 border-black w-32 h-32">
+                <div key={i} className="border-2 border-black w-48 h-48">
                   <div className="bg-black opacity-10 w-full h-full" />
                 </div>
               );
             })
           )}
+        </div>
         </div>
       </div>
 

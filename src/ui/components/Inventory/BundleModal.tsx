@@ -16,6 +16,7 @@ import {
 } from "../../components/Store/Store";
 import { load } from "protobufjs";
 import useItems from "../../lib/hooks/useItems";
+import { set } from "object-path-immutable";
 export default function BoundleModal(props) {
 
   const {
@@ -27,8 +28,10 @@ export default function BoundleModal(props) {
 
   const [loading,setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
+  const [isRequired, setIsRequired] = useState(false)
 
 
   const [items, setItems] = useState(props.items);
@@ -107,18 +110,33 @@ export default function BoundleModal(props) {
     e.preventDefault();
     if(name != ""){
       setLoading(true)
-      bag.bundle({ids:checkedIds.map(Number),name}).then((r)=>{
-        console.log(r)
-        setLoading(false)
-        setIsOpen(false)
-        queryClient.refetchQueries("inventory");
-      })
+      try{
+        bag.bundle({ids:checkedIds.map(Number),name}).then((r)=>{
+          queryClient.refetchQueries("inventory");
+          setName('');
+          console.log(r)
+          setLoading(false)
+          setCheckedIds([]);
+          setIsOpen(false)
+          
+        })
+      }catch(err){
+        setName('');
+        
+          console.error(err)
+          setLoading(false)
+          setIsOpen(false)
+      }
+      
    
+    }else{
+      setIsRequired(true);
     }
     
   };
 
   function handleChange(e){
+    setIsRequired(false)
     if(e.target.name == "bundleName"){
       setName(e.target.value);
     }
@@ -153,7 +171,8 @@ export default function BoundleModal(props) {
         title="Bundle Item"
       >
         <form>
-          <input name="bundleName" type="text" placeholder="boundle name" onChange={handleChange}/>
+          <input name="bundleName" value={name} disabled={loading} type="text" placeholder="bundle name" onChange={handleChange}/>
+          {isRequired && <span className="text-red-500">*A bundle name is required</span>}
           <br/><br/>
           {/* {drips.length >0 && <><b>[Drip] </b><br/></>}
           {itemCheckList_drip}<br/> */}
@@ -180,7 +199,7 @@ export default function BoundleModal(props) {
           <AiOutlineLoading className="ml-2 inline-block animate-spin" />
           }
           {!loading &&
-          <button className="btn-inventory" onClick={bundleItem}>Boundle</button>
+          <button className="btn-inventory" onClick={bundleItem}>Bundle</button>
           }
           
           </form>
