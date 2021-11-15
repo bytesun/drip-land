@@ -9,7 +9,7 @@ export default function Modal({
   openModal,
   closeModal,
   children,
-  className = "w-full max-w-sm",
+  className = "w-full max-w-lg",
 }) {
   const cancelButtonRef = useRef();
 
