@@ -41,7 +41,10 @@ export default function BoundleModal(props) {
   const [isCreateStepTwoOpen, setIsCreateStepTwoOpen] = useState(false);
   const [isCreateStepThreeOpen, setIsCreateStepThreeOpen] = useState(false);
 
-  const [items, setItems] = useState(props.items);
+  const [items, setItems] = useState([]);
+  const [itempages,setItempages] = useState([[]])
+  const [bundles,setBundles] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
   const [name, setName] = useState("");
   const [checkedIds, setCheckedIds] = useState([])
   const [stageItems, setStageItems] = useState([]);
@@ -50,13 +53,56 @@ export default function BoundleModal(props) {
 
 
   useEffect(()=>{
-    setItems(props.items);
-  },[props.items]);
+    //separate drip, items and bundles
+    const pitems = props.items;
+    pitems.map(pi=>{
+      console.log("item :"+pi.name+" ,properties:"+pi.properties.length +",children :"+pi.children +", childOf: "+pi.childOf+",dripProperties:"+pi.dripProperties )
+    })
+    
+    
+    let titems = pitems && pitems.filter(i => i.properties.length == 0 );
+    
+    setBundles(titems);
+    let bitems = pitems && pitems.filter(i => i.properties.length > 0 );
+    
+    if(bitems.length > 12){//page size = 12
+    
+      let ppitems = [];
+      let pppitems = [];
+      console.log("items:"+bitems.length)
+      for(var i=0; i<bitems.length; i++){
+        pppitems.push(bitems[i]);
+        console.log("i="+i)
+        if(i%12 == 11){          
+          ppitems.push(pppitems);
+          console.log("i="+i+",page:"+ppitems.length)
+          pppitems = [];
+        } 
+
+      }
+      if(pppitems.length>0)ppitems.push(pppitems);
+      console.log("pages:"+ppitems.length)
+      setItempages(ppitems);
+      setItems(ppitems[0]);
+    }else{
+      setItems(bitems);
+    }
+    
+    
+
+  },[]);
+
   const itemlist = items.map(item => (
     
     <div className="cursor-pointer" onClick={()=>addToStage(item)}> +{item.name}</div>
     
   ));
+  const itempagination = itempages.map((ip,i)=>
+    <span>{i>0 && ","}<a href="#" onClick={()=>changePage(i)}>{i+1}</a></span>
+  )
+  const bundlelist = bundles && bundles.map(bi=> (
+    <div className="cursor-pointer" onClick={()=>addToStage(bi)}> +{bi.name}</div>
+  ))
   const addToStage = (i: Item) =>{
     var tstageItems = stageItems;
     tstageItems.push(i);
@@ -88,73 +134,73 @@ export default function BoundleModal(props) {
     
   }
 
- const {drips,bundles,heads,chests,waists,hands,underwares,pants,accessories,foots } = useItems(props.items);
-  const itemCheckList_drip = drips && drips.map(item => (
-    <>
+//  const {drips,bundles,heads,chests,waists,hands,underwares,pants,accessories,foots } = useItems(props.items);
+//   const itemCheckList_drip = drips && drips.map(item => (
+//     <>
 
-    <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>
+//     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>
     
-    <label > {item.name}</label><br></br>
-    </>
-  ));
+//     <label > {item.name}</label><br></br>
+//     </>
+//   ));
 
-  const itemCheckList_bundle = bundles && bundles.map(item => (
-    <>
+//   const itemCheckList_bundle = bundles && bundles.map(item => (
+//     <>
 
-    <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>
+//     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>
     
-    <label > {item.name}</label><br></br>
-    </>
-  ));
+//     <label > {item.name}</label><br></br>
+//     </>
+//   ));
 
-  const itemCheckList_hand = hands && hands.map(item => (
-    <> 
-    <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
-    <label > {item.name}</label><br></br>
-    </>
-  ));
-  const itemCheckList_chest = chests && chests.map(item => (
-    <> 
-    <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
-    <label > {item.name}</label><br></br>
-    </>
-  ));
-  const itemCheckList_waist = waists && waists.map(item => (
-    <> 
-    <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
-    <label > {item.name}</label><br></br>
-    </>
-  ));
-  const itemCheckList_head = heads && heads.map(item => (
-    <> 
-    <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
-    <label > {item.name}</label><br></br>
-    </>
-  ));
-  const itemCheckList_underware = underwares && underwares.map(item => (
-    <> 
-    <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
-    <label > {item.name}</label><br></br>
-    </>
-  ));
-  const itemCheckList_pants = pants && pants.map(item => (
-    <> 
-    <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
-    <label > {item.name}</label><br></br>
-    </>
-  ));
-  const itemCheckList_accessory = accessories && accessories.map(item => (
-    <> 
-    <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
-    <label > {item.name}</label><br></br>
-    </>
-  ));
-  const itemCheckList_foot = foots && foots.map(item => (
-    <> 
-    <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
-    <label > {item.name}</label><br></br>
-    </>
-  ));
+//   const itemCheckList_hand = hands && hands.map(item => (
+//     <> 
+//     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
+//     <label > {item.name}</label><br></br>
+//     </>
+//   ));
+//   const itemCheckList_chest = chests && chests.map(item => (
+//     <> 
+//     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
+//     <label > {item.name}</label><br></br>
+//     </>
+//   ));
+//   const itemCheckList_waist = waists && waists.map(item => (
+//     <> 
+//     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
+//     <label > {item.name}</label><br></br>
+//     </>
+//   ));
+//   const itemCheckList_head = heads && heads.map(item => (
+//     <> 
+//     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
+//     <label > {item.name}</label><br></br>
+//     </>
+//   ));
+//   const itemCheckList_underware = underwares && underwares.map(item => (
+//     <> 
+//     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
+//     <label > {item.name}</label><br></br>
+//     </>
+//   ));
+//   const itemCheckList_pants = pants && pants.map(item => (
+//     <> 
+//     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
+//     <label > {item.name}</label><br></br>
+//     </>
+//   ));
+//   const itemCheckList_accessory = accessories && accessories.map(item => (
+//     <> 
+//     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
+//     <label > {item.name}</label><br></br>
+//     </>
+//   ));
+//   const itemCheckList_foot = foots && foots.map(item => (
+//     <> 
+//     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
+//     <label > {item.name}</label><br></br>
+//     </>
+//   ));
 
   
   const bundleItem = (e) => {
@@ -174,7 +220,7 @@ export default function BoundleModal(props) {
           
         })
       }catch(err){
-        setName('');
+          setName('');
         
           console.error(err)
           setLoading(false)
@@ -282,6 +328,24 @@ export default function BoundleModal(props) {
     setIsCreateStepThreeOpen(false);
 
   }
+
+  const changePage = (page) =>{
+    setItems(itempages[page])
+  }
+
+  const previousePage = ()=>{
+    var cpage = currentPage;
+    cpage--;
+    setCurrentPage(cpage);
+    setItems(itempages[cpage]);
+  }
+
+  const nextPage = () => {
+    var cpage = currentPage;
+    cpage++;
+    setCurrentPage(cpage);
+    setItems(itempages[cpage]);
+  }
   return (
     <>
       <div>
@@ -347,30 +411,45 @@ export default function BoundleModal(props) {
             <label  onClick={()=>changeFilter("bundles")} className={" cursor-pointer mr-5 "+(activeFilter == "bundles" ? "bg-yellow-400": "bg-gray-400")}>Bundles</label>
           </div>
 
+          <div className="mt-3">
+            Sort:
+            <select name="sort" id="sort">
+              <option value="category">Item Category</option>
+              <option value="name">Item Name</option>
+              <option value="numer">Item #</option>
+            </select>
+            Filter:
+            <select name="filter" id="filter">
+              <option value="category">Item Category</option>
+              <option value="name">Item Name</option>
+            
+            </select>
+           </div> 
+          <div className="grid grid-cols-3 mt-3">
 
-          {itemlist}
 
-{/*           
-          {bundles.length>0 && <><b>[Bundle] </b><br/></>}
-          {itemCheckList_bundle}
-          {heads.length > 0 && <><b>[Head] </b><br/></>}
-          {itemCheckList_head}
-          {chests.length>0 && <><b>[Chest] </b><br/></>}
-          {itemCheckList_chest}
-          {waists.length > 0 && <><b>[Waist]</b><br/></>}
-          {itemCheckList_waist}
-          {hands.length > 0 && <><b>[Hand] </b><br/></>}
-          {itemCheckList_hand}
-          {underwares.length>0 && <><b>[Underwear] </b><br/></>}
-          {itemCheckList_underware}
-          {pants.length>0 && <><b>[Pants] </b><br/></>}
-          {itemCheckList_pants}
-          {accessories.length>0&& <><b>[Accessory]</b><br/></>}
-          {itemCheckList_accessory}
-          {foots.length>0 && <><b>[Foot] </b><br/></>}
-          {itemCheckList_foot}<br/> */}
+            <div className="inline-block  align-middle">
+              {activeFilter == "items" && currentPage > 0 &&
+              <div className="text-center cursor-pointer " onClick={previousePage}>
+                {"\<\<"}
+            </div>
+            }
+            </div>
+            <div className="grid-span-3">
+              {activeFilter == "items" && itemlist}          
+              {activeFilter == "bundles" && bundlelist}
+            </div>
+            <div>
+
+            {currentPage < itempages.length-1 && <div className="text-center cursor-pointer " onClick={nextPage}>           
+                {"\>\>"}
+              </div>}
+            </div>
+            
+          </div>
           
-          <div className="flex mt-2 grid grid-cols-1 border-4">
+
+          <div className="flex mt-2 grid grid-cols-1 border-4"> 
             {stageItemList}
             {isRequired && <span className="text-red-500">At least two items needed for bundle</span>}
           </div>
