@@ -18,6 +18,7 @@ import { load } from "protobufjs";
 import useItems from "../../lib/hooks/useItems";
 import { set } from "object-path-immutable";
 import { Item } from "../../declarations/Bag/Bag.did";
+import e from "cors";
 export default function BoundleModal(props) {
 
   const {
@@ -33,6 +34,7 @@ export default function BoundleModal(props) {
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
   const [isRequired, setIsRequired] = useState(false)
+  const [message, setMessage] = useState("");//input validate message
 
   const [isStepOneOpen, setIsStepOneOpen] = useState(false);
   const [isStepTwoOpen, setIsStepTwoOpen] = useState(false);
@@ -43,13 +45,23 @@ export default function BoundleModal(props) {
 
   const [items, setItems] = useState([]);
   const [itempages,setItempages] = useState([[]])
+  const [allitems,setAllitems] = useState([]);
   const [bundles,setBundles] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [name, setName] = useState("");
   const [checkedIds, setCheckedIds] = useState([])
   const [stageItems, setStageItems] = useState([]);
   const [activeFilter, setActiveFilter] = useState("");
-  const changeFilter = (filter) => setActiveFilter(filter); 
+
+
+  const changeFilter = (filter) => {
+    setActiveFilter(filter); 
+    if(filter == "items"){
+      paging(allitems,currentPage);
+    }else if(filter == "bundles"){
+      paging(bundles,currentPage);
+    }
+  }
 
 
   useEffect(()=>{
@@ -59,16 +71,27 @@ export default function BoundleModal(props) {
       console.log("item :"+pi.name+" ,properties:"+pi.properties.length +",children :"+pi.children +", childOf: "+pi.childOf+",dripProperties:"+pi.dripProperties )
     })
     
-    
+    //bundles
     let titems = pitems && pitems.filter(i => i.properties.length == 0 );
     
     setBundles(titems);
+
+    //bag items
     let bitems = pitems && pitems.filter(i => i.properties.length > 0 );
+
+    setAllitems(bitems);    
     
+    paging(bitems,0);
+    
+
+  },[props.items]);
+
+  const paging = (bitems,page)=>{
+    let ppitems = [];
+    let pppitems = [];
     if(bitems.length > 12){//page size = 12
     
-      let ppitems = [];
-      let pppitems = [];
+
       console.log("items:"+bitems.length)
       for(var i=0; i<bitems.length; i++){
         pppitems.push(bitems[i]);
@@ -83,15 +106,13 @@ export default function BoundleModal(props) {
       if(pppitems.length>0)ppitems.push(pppitems);
       console.log("pages:"+ppitems.length)
       setItempages(ppitems);
-      setItems(ppitems[0]);
+      setItems(ppitems[page]);
     }else{
+      ppitems.push(bitems)
+      setItempages(ppitems);
       setItems(bitems);
     }
-    
-    
-
-  },[]);
-
+  }
   const itemlist = items.map(item => (
     
     <div className="cursor-pointer" onClick={()=>addToStage(item)}> +{item.name}</div>
@@ -134,74 +155,6 @@ export default function BoundleModal(props) {
     
   }
 
-//  const {drips,bundles,heads,chests,waists,hands,underwares,pants,accessories,foots } = useItems(props.items);
-//   const itemCheckList_drip = drips && drips.map(item => (
-//     <>
-
-//     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>
-    
-//     <label > {item.name}</label><br></br>
-//     </>
-//   ));
-
-//   const itemCheckList_bundle = bundles && bundles.map(item => (
-//     <>
-
-//     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>
-    
-//     <label > {item.name}</label><br></br>
-//     </>
-//   ));
-
-//   const itemCheckList_hand = hands && hands.map(item => (
-//     <> 
-//     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
-//     <label > {item.name}</label><br></br>
-//     </>
-//   ));
-//   const itemCheckList_chest = chests && chests.map(item => (
-//     <> 
-//     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
-//     <label > {item.name}</label><br></br>
-//     </>
-//   ));
-//   const itemCheckList_waist = waists && waists.map(item => (
-//     <> 
-//     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
-//     <label > {item.name}</label><br></br>
-//     </>
-//   ));
-//   const itemCheckList_head = heads && heads.map(item => (
-//     <> 
-//     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
-//     <label > {item.name}</label><br></br>
-//     </>
-//   ));
-//   const itemCheckList_underware = underwares && underwares.map(item => (
-//     <> 
-//     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
-//     <label > {item.name}</label><br></br>
-//     </>
-//   ));
-//   const itemCheckList_pants = pants && pants.map(item => (
-//     <> 
-//     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
-//     <label > {item.name}</label><br></br>
-//     </>
-//   ));
-//   const itemCheckList_accessory = accessories && accessories.map(item => (
-//     <> 
-//     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
-//     <label > {item.name}</label><br></br>
-//     </>
-//   ));
-//   const itemCheckList_foot = foots && foots.map(item => (
-//     <> 
-//     <input type="checkbox" name={item.name} value={item.id} onChange={checkItem}/>    
-//     <label > {item.name}</label><br></br>
-//     </>
-//   ));
-
   
   const bundleItem = (e) => {
     e.preventDefault();
@@ -237,8 +190,11 @@ export default function BoundleModal(props) {
 
   function handleChange(e){
     setIsRequired(false)
+    setMessage("")
     if(e.target.name == "bundleName"){
-      setName(e.target.value);
+      let isvalidate = allLetter(e.target.value);
+      if(isvalidate)   setName(e.target.value);
+      else setMessage("Please input validate characters, no symbols!");
     }
   }
   function checkItem(e){
@@ -346,6 +302,54 @@ export default function BoundleModal(props) {
     setCurrentPage(cpage);
     setItems(itempages[cpage]);
   }
+  const filterbyslot = (e) =>{
+    let slot = e.target.value;
+    console.log("filter by "+slot)
+    console.log(allitems[0].properties[0].name)
+      let filtereditems = allitems.filter(i=>i.properties[0].value.Text == slot)
+      paging(filtereditems,currentPage);
+    
+  }
+
+  const sortby = (e) =>{
+    console.log("sort by :"+e.target.value)
+    let st = e.target.value;
+    var sorteditems = [];
+    var filtereditems = []
+    if(activeFilter == "items"){
+      filtereditems = allitems;
+    }else{
+      filtereditems = bundles;
+    }
+
+    if(st == "name"){
+      
+      sorteditems = filtereditems.sort((a,b)=>a.name < b.name ? -1 : (a.name > b.name ? 1 : 0));
+     
+    }else if(st == "category"){
+      console.log("filtereditems: "+filtereditems[0].properties[0].value.Text)
+      sorteditems = filtereditems.sort((a,b)=>a.properties[0].value.Text < b.properties[0].value.Text ? -1 : (a.properties[0].value.Text > b.properties[0].value.Text ? 1 : 0));
+    }else if(st == "number"){
+
+      sorteditems = filtereditems.sort((a,b)=>a.id < b.id ? -1 : (a.id > b.id ? 1 : 0));
+    }
+    
+    paging(sorteditems,currentPage);   
+  }
+
+  const allLetter = (inputtxt)=>
+  {
+   var letters = /^[A-Za-z]+$/;
+   if(inputtxt.match(letters))
+     {
+      return true;
+     }
+   else
+     {
+    
+     return false;
+     }
+  }
   return (
     <>
       <div>
@@ -382,6 +386,7 @@ export default function BoundleModal(props) {
         <form >
           <label>Please name you new Drip bundle </label><br/>
           <input name="bundleName" value={name} disabled={loading} type="text"  onChange={handleChange}/>
+          {message != "" && <span className="text-red-500">*{message}</span>}
           {isRequired && <span className="text-red-500">*A bundle name is required</span>}
          
           
@@ -413,17 +418,29 @@ export default function BoundleModal(props) {
 
           <div className="mt-3">
             Sort:
-            <select name="sort" id="sort">
-              <option value="category">Item Category</option>
+            <select name="sort" id="sort" onChange={sortby}>
+            <option value="">--sort by --</option>
               <option value="name">Item Name</option>
-              <option value="numer">Item #</option>
+              <option value="category">Item Category</option>
+              
+              <option value="number">Item #</option>
             </select>
             Filter:
-            <select name="filter" id="filter">
-              <option value="category">Item Category</option>
-              <option value="name">Item Name</option>
+            {activeFilter == "items"&&
+              <select name="filter" id="filter" onChange={filterbyslot}>
+              <option value="">--Slot--</option>
+              <option value="hand">Hand</option>
+              <option value="chest">Chest</option>
+              <option value="head">Head</option>
+              <option value="waist">Waist</option>
+              <option value="pants">Pants</option>
+              <option value="underwear">Underwear</option>
+              <option value="accessory">Accessory</option>
+              <option value="foot">Foot</option>
             
             </select>
+            }
+            
            </div> 
           <div className="grid grid-cols-3 mt-3">
 

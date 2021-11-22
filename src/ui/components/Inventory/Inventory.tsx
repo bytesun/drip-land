@@ -50,7 +50,10 @@ export function Inventory() {
     setDrips(tdrips);
     setDripCount(tdrips.length);
 
-    setTypeItems(tdrips);
+    //setTypeItems(tdrips);
+    if(itemtype == "Drip") setTypeItems(drips);
+    else if(itemtype == "Bag") setTypeItems(bags);
+    else setTypeItems(items);
 
     setBags(tbags);
     setBagCount(tbags.length);
